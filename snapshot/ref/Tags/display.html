@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>fields 2.0.4-SNAPSHOT</title>
+    <title>fields 2.1.0-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -70,7 +70,11 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>f:display</h1><p class="paragraph"/><h2>Description</h2><p class="paragraph"/> <em class="italic">f:display</em>  renders one or all properties for display. If there is no  <em class="italic">&#95;display</em>  template in scope the tag will simply render the property value.<p class="paragraph"/>If the  <em class="italic">f:display</em>  tag has a body its output is used as the value passed as the  <em class="italic">value</em>  model to the  <em class="italic">&#95;display</em>  template. If there is no body then the 'raw' property value is passed to  <em class="italic">g:fieldValue</em> ,  <em class="italic">g:formatDate</em>  or  <em class="italic">g:formatBoolean</em>  depending on its type and the result is passed as the  <em class="italic">value</em>  model to the  <em class="italic">&#95;display</em>  template.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;f:display bean=<span class="java&#45;quote">"person"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> displayStyle=<span class="java&#45;quote">"table"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"name"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"dateOfBirth"</span>&#62;
+                <h1>f:display</h1><p class="paragraph"/><h2>Description</h2><p class="paragraph"/> <em class="italic">f:display</em>  renders a property for display. If there is no  <em class="italic">&#95;displayWrapper</em>  template in scope the tag will simply render the property value.<p class="paragraph"/> <em class="italic">f:display</em>  template will look for a  <em class="italic">&#95;displayWrapper</em>  for the wrapper itself and a  <em class="italic">&#95;displayWidget</em>  for the widget used inside the wrapper template.<p class="paragraph"/>If the  <em class="italic">f:display</em>  tag has a body its output is used as the value passed as the  <em class="italic">value</em>  model to the  <em class="italic">&#95;display</em>  template. If there is no body then the 'raw' property value is passed to  <em class="italic">g:fieldValue</em> ,  <em class="italic">g:formatDate</em>  or  <em class="italic">g:formatBoolean</em>  depending on its type and the result is passed as the  <em class="italic">value</em>  model to the  <em class="italic">&#95;display</em>  template.<p class="paragraph"/>In version 1.5 new attributes were added:
+Since then you can specify the folders where the templates are located. You can do this for the wrapper folder, the widget folder ot both (if they are located on the same folder).<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;f:display bean=<span class="java&#45;quote">"person"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> displayStyle=<span class="java&#45;quote">"table"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"name"</span>/&#62;<p class="paragraph"/>// renders _fields/bootstrap3/_displayWrapper.gsp:
+&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"name"</span> wrapper=<span class="java&#45;quote">"bootstrap3"</span>/&#62;<p class="paragraph"/>// renders _fields/maskedInput/_displayWidget.gsp:
+&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"name"</span> widget=<span class="java&#45;quote">"maskedInput"</span>/&#62;<p class="paragraph"/>// renders _fields/maskedInput/_displayWrapper.gsp and _fields/maskedInput/_displayWidget.gsp:
+&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"name"</span> templates=<span class="java&#45;quote">"maskedInput"</span>/&#62;<p class="paragraph"/>&#60;f:display bean=<span class="java&#45;quote">"person"</span> property=<span class="java&#45;quote">"dateOfBirth"</span>&#62;
     &#60;g:formatDate format=<span class="java&#45;quote">"dd MMM yyyy"</span> date=<span class="java&#45;quote">"$&#123;value&#125;"</span>/&#62;
 &#60;/f:display&#62;</pre></div><p class="paragraph"/><h2>Attributes</h2><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Name</strong></th><th><strong class="bold">Required?</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">bean</strong></td><td>yes if not inside  <em class="italic">f:with</em> </td><td>The bean whose property is being rendered. This can be the object itself or the name of a page-scope variable.</td></tr><tr class="table-even"><td><strong class="bold">property</strong></td><td>&#160;</td><td>The path to the property. This can include any level of nesting and numeric or string indexes. For example <code>employees&#91;0&#93;.address&#91;home&#93;.street</code> is a valid path. If absent, all properties will be displayed.</td></tr><tr class="table-odd"><td><strong class="bold">value</strong></td><td>&#160;</td><td>Overrides the actual value of the property.</td></tr><tr class="table-even"><td><strong class="bold">default</strong></td><td>&#160;</td><td>A default value for the property that will be used if the actual property value is  <em class="italic">falsy</em> .</td></tr><tr class="table-odd"><td><strong class="bold">label</strong></td><td>&#160;</td><td>Overrides the field label passed to the template. This value may either be an i18n key or a literal string.</td></tr><tr class="table-even"><td><strong class="bold">displayStyle</strong></td><td>&#160;</td><td>When specified and different from the string  <em class="italic">default</em> , this tag will try to use a  <em class="italic">&#95;display-${displayStyle}</em>  template with a  <em class="italic">&#95;display</em>  template as fallback.  <em class="italic">displayStyle="table"</em>  will render embedded components by default with  <em class="italic">toString()</em>  in stead of rendering all nested properties.</td></tr></table><p class="paragraph"/>Any additional attributes are passed to the rendered template.
             </div>
@@ -94,6 +98,9 @@ function addJsClass(el) {
                             <div class="menu-item"><a href="../../ref/Tags/display.html">display</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/displayWidget.html">displayWidget</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
                             </div>
                             
@@ -101,6 +108,9 @@ function addJsClass(el) {
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/widget.html">widget</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/with.html">with</a>
