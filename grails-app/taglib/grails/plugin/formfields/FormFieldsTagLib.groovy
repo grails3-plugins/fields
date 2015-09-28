@@ -544,21 +544,38 @@ class FormFieldsTagLib implements GrailsApplicationAware {
     }
 
     private CharSequence renderNumericInput(Map model, Map attrs) {
+
+		final String renderedInput
+
         if (!attrs.type && model.constraints?.inList) {
             attrs.from = model.constraints.inList
             if (!model.required) attrs.noSelection = ["": ""]
-            return g.select(attrs)
+			renderedInput = g.select(attrs)
         } else if (model.constraints?.range) {
             attrs.type = attrs.type ?: "range"
             attrs.min = model.constraints.range.from
             attrs.max = model.constraints.range.to
+
+			def outputId = "currentValue_$attrs.name"
+			attrs.oninput = "document.getElementById('$outputId').value=this.value"
+
+			def buffer = new FastStringWriter()
+
+			buffer << g.field(attrs)
+			buffer << "<output id=\"$outputId\" " +
+					"class=\"property-value\">${attrs.value?:0}</output>"
+
+			renderedInput = buffer.buffer
         } else {
             attrs.type = attrs.type ?: "number"
             if (model.constraints?.scale != null) attrs.step = "0.${'0' * (model.constraints.scale - 1)}1"
             if (model.constraints?.min != null) attrs.min = model.constraints.min
             if (model.constraints?.max != null) attrs.max = model.constraints.max
+
+			renderedInput = g.field(attrs)
         }
-        return g.field(attrs)
+
+		return renderedInput
     }
 
     private CharSequence renderEnumInput(Map model, Map attrs) {

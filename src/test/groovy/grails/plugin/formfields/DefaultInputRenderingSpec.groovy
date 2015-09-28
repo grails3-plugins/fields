@@ -276,6 +276,20 @@ class DefaultInputRenderingSpec extends Specification {
 		[scale: 3]    | /step="0.001"/
 	}
 
+	@Issue('https://github.com/grails3-plugins/fields/issues/16')
+	def "input for a numeric property with a range constraint renders output tag"() {
+		given:
+		def model = [type: Integer, property: "prop", constraints: [range: (0..10)], value: 8, persistentProperty: basicProperty]
+
+		when:
+		def output = tagLib.renderDefaultInput(model)
+
+		then:
+		output =~ /output id="currentValue_$model.property"/
+		output =~ /class="property-value"/
+		output =~ /$model.value/
+	}
+
 	def "input for a #type.simpleName property with #constraints constraints matches #outputPattern"() {
 		given:
 		def model = [type: type, property: "prop", constraints: constraints, persistentProperty: basicProperty]
