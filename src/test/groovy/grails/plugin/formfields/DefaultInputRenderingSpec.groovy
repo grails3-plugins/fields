@@ -260,6 +260,7 @@ class DefaultInputRenderingSpec extends Specification {
 		output =~ /input type="range"/
 		output =~ /min="0"/
 		output =~ /max="10"/
+		output =~ /onchange/
 	}
 
 	def "input for a numeric property with a scale constraint has a step"() {

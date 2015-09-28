@@ -2,12 +2,13 @@ package grails.plugin.formfields.taglib
 
 import grails.plugin.formfields.mock.Person
 import grails.plugin.formfields.*
+import grails.plugin.formfields.mock.Widget
 import grails.test.mixin.*
 import org.grails.taglib.GrailsTagException
 import spock.lang.*
 
 @TestFor(FormFieldsTagLib)
-@Mock(Person)
+@Mock([Person, Widget])
 @Unroll
 class AllTagSpec extends AbstractFormFieldsTagLibSpec {
 
@@ -102,5 +103,25 @@ class AllTagSpec extends AbstractFormFieldsTagLibSpec {
         then:
         GrailsTagException e = thrown()
         e.message.contains 'The [except] and [order] attributes may not be used together.'
+    }
+
+    @Issue('https://github.com/grails3-plugins/fields/issues/16')
+    void 'input type range adds a span to show the selected value when default template is used'() {
+        given:
+        def taglib = applicationContext.getBean(FormFieldsTagLib)
+        taglib.formFieldsTemplateService = Mock(FormFieldsTemplateService)
+        mockEmbeddedSitemeshLayout(taglib)
+
+        and:
+        Widget widgetInstance = new Widget(width: 24)
+
+        when:
+        def slurpedOutput = new XmlSlurper().parseText(
+            applyTemplate('<f:all bean="widgetInstance"/>', [widgetInstance: widgetInstance])
+        )
+
+        then:
+        slurpedOutput.input.'@onchange' == "document.getElementById('width-span').textContent=document.getElementsByName('width')[0].value"
+        slurpedOutput.span.'@id' == 'width-span'
     }
 }

@@ -549,9 +549,7 @@ class FormFieldsTagLib implements GrailsApplicationAware {
             if (!model.required) attrs.noSelection = ["": ""]
             return g.select(attrs)
         } else if (model.constraints?.range) {
-            attrs.type = attrs.type ?: "range"
-            attrs.min = model.constraints.range.from
-            attrs.max = model.constraints.range.to
+			return renderRangeTypeInput(model, attrs)
         } else {
             attrs.type = attrs.type ?: "number"
             if (model.constraints?.scale != null) attrs.step = "0.${'0' * (model.constraints.scale - 1)}1"
@@ -560,6 +558,21 @@ class FormFieldsTagLib implements GrailsApplicationAware {
         }
         return g.field(attrs)
     }
+
+	private CharSequence renderRangeTypeInput(Map model, Map attrs) {
+		def writer = new FastStringWriter()
+
+		attrs.type = attrs.type ?: "range"
+		attrs.min = model.constraints.range.from
+		attrs.max = model.constraints.range.to
+		attrs.onchange =
+			"document.getElementById('${attrs.name + '-span'}').textContent=document.getElementsByName('$attrs.name')[0].value"
+
+		writer << g.field(attrs)
+		writer << "<span id='${attrs.name + '-span'}'></span>"
+
+		writer.buffer
+	}
 
     private CharSequence renderEnumInput(Map model, Map attrs) {
         if (attrs.value instanceof Enum)
